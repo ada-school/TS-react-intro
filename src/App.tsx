@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { TaskItem } from "./components/TaskItem";
+import { AddTaskForm } from "./components/AddTaskForm";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+interface Task {
+  taskText: string;
+  id: number;
+  isCompleted?: boolean;
 }
 
-export default App;
+export const App: React.FC = () => {
+  const [tasks, setTasks] = useState<Array<Task>>([]);
+
+  const handleOnAddTask = (newTaskText: string) => {
+    const newArray = [
+      ...tasks,
+      { id: tasks.length, taskText: newTaskText, isCompleted: false },
+    ];
+
+    setTasks(newArray);
+  };
+
+  return (
+    <main>
+      <AddTaskForm onAddTask={handleOnAddTask} />
+      <section id="task-list">
+        <h2>Task List</h2>
+        <ul>
+          {tasks.map(({ id, taskText, isCompleted }) => (
+            <TaskItem id={id} taskText={taskText} isCompleted={isCompleted} />
+          ))}
+        </ul>
+      </section>
+    </main>
+  );
+};
